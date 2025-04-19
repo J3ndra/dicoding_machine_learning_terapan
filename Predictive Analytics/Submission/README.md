@@ -1,7 +1,7 @@
 # Laporan Proyek Predictive Analytics - Junianto Endra Kartika
 
 <p align="center">
-  <img src="https://i.ibb.co.com/ccFCG43K/image.png" />
+  <img src="https://github.com/J3ndra/dicoding_machine_learning_terapan/blob/main/Predictive%20Analytics/Images/image_1.png?raw=true" />
 </p>
 
 <p align="center">Gambar 1. Cover</p>
@@ -85,7 +85,7 @@ Dari tabel 1 terlihat bahwa fitur `N` memiliki nilai minimum 0, namun tidak dapa
 #### Distribusi pada label
 
 <p align="center">
-  <img src="https://i.ibb.co.com/C51Kxwn3/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_2.png" />
 </p>
 
 <p align="center">Gambar 2. Distribusi label</p>
@@ -97,7 +97,7 @@ Gambar 2 memperlihatkan kita bahwa distribusi label pada semua label seimbang ya
 Disini, kita akan melakukan pengecekan apakah terdapat outliers pada data kita.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/S4RwWyms/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_3.png" />
 </p>
 
 <p align="center">Gambar 3. Visualisasi pengecekan outliers</p>
@@ -113,7 +113,7 @@ Menurut gambar 3, terdapat outliers pada data kita. Outlier merupakan nilai yang
 Namun, saat dilakukan pengecekan ulang pada distribusi label pada data (Gambar 4). Terdapat label yang hilang, sehingga dapat diasumsikan bahwa terdapat *crop* yang memang berbeda cara penanganan nya dari *crop* yang lain.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/Xk2X2tcS/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_4.png" />
 </p>
 
 <p align="center">Gambar 4. Visualisasi hasil pengurangan outliers</p>
@@ -125,7 +125,7 @@ Sehingga kita akan tetap menggunakan data tanpa menghilangkan outliers.
 Analisis univariat adalah jenis analisis statistik yang fokus pada satu variabel saja dalam satu waktu.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/wZz2vR2N/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_5.png" />
 </p>
 
 <p align="center">Gambar 5. Visualisasi univariate analysis</p>
@@ -145,7 +145,7 @@ Berikut adalah hasil analisa gambar 5:
 Analisis multivariat adalah jenis analisis statistik yang melibatkan lebih dari satu variabel secara simultan.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/7J4NWVYn/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_6.png" />
 </p>
 
 <p align="center">Gambar 6. Visualisasi multivariate analysis</p>
@@ -306,7 +306,7 @@ Tabel 5 menunjukkan bahwa ke-3 model memiliki akurasi yang cukup tinggi, dan **R
 Matriks yang menunjukkan berapa banyak data kelas A diprediksi sebagai kelas B. Pada proyek ini, confusion matrix sangat berguna untuk melihat apakah hasil prediksi sudah sesuai dengan data yang nyata.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/RGSRS9Lk/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_7.png" />
 </p>
 
 <p align="center">Gambar 7. Hasil confusion matrix</p>
