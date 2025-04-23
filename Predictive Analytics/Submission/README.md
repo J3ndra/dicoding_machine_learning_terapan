@@ -48,20 +48,36 @@ Dataset yang digunakan dalam proyek ini adalah **Crop Recommendation Dataset** y
 
 ### Informasi masing-masing fitur:
 
-- N: Rasio kandungan Nitrogen di dalam tanah.
-- P: Rasio kandungan Fosfor (Phosphorous) di dalam tanah.
-- K: Rasio kandungan Kalium (Potassium) di dalam tanah.
-- temperature: Suhu rata-rata lingkungan dalam derajat Celsius (°C).
-- humidity: Kelembaban relatif udara dalam persentase (%).
-- ph: Nilai pH (tingkat keasaman atau kebasaan) tanah.
-- rainfall: Jumlah curah hujan rata-rata dalam milimeter (mm).
-- label: Jenis tanaman yang direkomendasikan atau cocok untuk ditanam pada kondisi tersebut (Variabel Target).
+- **N**: Rasio kandungan Nitrogen di dalam tanah.
+- **P**: Rasio kandungan Fosfor (Phosphorous) di dalam tanah.
+- **K**: Rasio kandungan Kalium (Potassium) di dalam tanah.
+- **temperature**: Suhu rata-rata lingkungan dalam derajat Celsius (°C).
+- **humidity**: Kelembaban relatif udara dalam persentase (%).
+- **ph**: Nilai pH (tingkat keasaman atau kebasaan) tanah.
+- **rainfall**: Jumlah curah hujan rata-rata dalam milimeter (mm).
+- **label**: Jenis tanaman yang direkomendasikan atau cocok untuk ditanam pada kondisi tersebut (Variabel Target).
 
 ### Exploratory Data Analysis (EDA)
 
 Exploratory Data Analysis (EDA) merupakan tahap awal analisis data untuk mengenali sifat-sifat utama, susunan, dan elemen penting dalam dataset sebelum analisis statistik atau prediksi yang lebih mendalam.
 
 Berikut adalah tahapan EDA yang telah saya lakukan:
+
+#### Hubungan antara label dengan fitur
+
+<p align="center">
+  <img src="https://i.ibb.co.com/d0StQBcN/image.png" />
+</p>
+
+<p align="center">Gambar 2. Hubungan antara label dengan fitur</p>
+
+Visualisasi pada Gambar 2 ini sangat berguna dalam melihat potensi separabilitas kelas sebelum membangun model klasifikasi serta memberikan gambaran awal mengenai kompleksitas data yang akan dihadapi oleh model.
+
+Beberapa pemahan data yang dapat diambil dari visualisasi tersebut adalah:
+
+- Pemisahan *cluster* yang cukup jelas pada beberapa fitur, seperti fitur `N` dengan fitur `P`, fitur `temperature` dengan fitur `humidity`, serta fitur `rainfall` dengan fitur `K` yang menunjukkan bahwa beberapa jenis tanaman atau *kelas* memiliki rentang nilai yang khas dan berbeda.
+- Fitur `K` memiliki nilai prediktif yang kuat, khususnya untuk memisahkan jenis tanaman atau *kelas* yang membutuhkan *Kalium* `K` tinggi. Perbedaan nilai prediktif yang kuat ini dapat menimbulkan *miss informasi* ketika dilakukan pengecekan *outliers*.
+- Fitur `rainfall` menunjukkan variasi yang cukup luas antar tanaman, dimana beberapa jenis tanaman atau *kelas* tampaknya memerlukan curah hujan yang lebih tinggi dibanding yang lain.
 
 #### Pengecekan deskripsi dataset pada fitur numerikal
 
@@ -88,37 +104,9 @@ Dari tabel 1 terlihat bahwa fitur `N` memiliki nilai minimum 0, namun tidak dapa
   <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_2.png" />
 </p>
 
-<p align="center">Gambar 2. Distribusi label</p>
+<p align="center">Gambar 3. Distribusi label</p>
 
-Gambar 2 memperlihatkan kita bahwa distribusi label pada semua label seimbang yaitu di `100 data`.
-
-#### Pengecekan outliers
-
-Disini, kita akan melakukan pengecekan apakah terdapat outliers pada data kita.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_3.png" />
-</p>
-
-<p align="center">Gambar 3. Visualisasi pengecekan outliers</p>
-
-Menurut gambar 3, terdapat outliers pada data kita. Outlier merupakan nilai yang jauh berbeda dari mayoritas data dalam dataset. Penghapusan outlier dapat meningkatkan mutu analisis dan model prediksi. Untuk mengidentifikasi dan menangani outlier, visualisasi dengan library ***Seaborn*** digunakan, diikuti dengan penerapan teknik **IQR** pada data.
-
-|  Sebelum  |  Sesudah  |
-|:---------:|:---------:|
-| (2200, 8) | (1846, 8) |
-
-<p>Tabel 2. Output hasil pengurangan outliers</p>
-
-Namun, saat dilakukan pengecekan ulang pada distribusi label pada data (Gambar 4). Terdapat label yang hilang, sehingga dapat diasumsikan bahwa terdapat *crop* yang memang berbeda cara penanganan nya dari *crop* yang lain.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_4.png" />
-</p>
-
-<p align="center">Gambar 4. Visualisasi hasil pengurangan outliers</p>
-
-Sehingga kita akan tetap menggunakan data tanpa menghilangkan outliers.
+Gambar 3 memperlihatkan kita bahwa distribusi label pada semua label seimbang yaitu di `100 data`.
 
 #### Univariate Analysis
 
@@ -128,9 +116,9 @@ Analisis univariat adalah jenis analisis statistik yang fokus pada satu variabel
   <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_5.png" />
 </p>
 
-<p align="center">Gambar 5. Visualisasi univariate analysis</p>
+<p align="center">Gambar 4. Visualisasi univariate analysis</p>
 
-Berikut adalah hasil analisa gambar 5:
+Berikut adalah hasil analisa gambar 4:
 
 - N (**Nitrogen**): Distribusi nitogres condong ke kiri dengan mayoritas nilai berada di bawah 50
 - P (**Fosforus**): Distribusi fosforus menyebar lebih merata dengan puncak di nilai sekitar 60 dan terdapat lonjakan pada nilai diatas 120
@@ -148,13 +136,39 @@ Analisis multivariat adalah jenis analisis statistik yang melibatkan lebih dari 
   <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_6.png" />
 </p>
 
-<p align="center">Gambar 6. Visualisasi multivariate analysis</p>
+<p align="center">Gambar 5. Visualisasi multivariate analysis</p>
 
-Dari nilai korelasi matriks diatas, fitur **K (Potasium)** dan **P (Fosforus)** mendapatkan nilai korelasi terbesar yaitu di angka `0.74`.
+Gambar 5 menunjukkan nilai korelasi matriks diatas, fitur **K (Potasium)** dan **P (Fosforus)** mendapatkan nilai korelasi terbesar yaitu di angka `0.74`.
 
 ## Data Preparation
 
-Pada tahap *Data Preparation*, data diubah menjadi format yang tepat untuk proses pemodelan. Proyek ini mengimplementasikan tiga tahapan penting, yaitu pemisahan data (Split Data) dan normalisasi (Normalization) dan encoder (Label Encoder).
+Pada tahap *Data Preparation*, pengecekan outliers akan dilakukan terlebih dahulu untuk dipastikan data sudah bersih dan terdistribusi dengan baik. Lalu data diubah menjadi format yang tepat untuk proses pemodelan. Proyek ini mengimplementasikan tiga tahapan penting, yaitu pemisahan data (Split Data) dan normalisasi (*Normalization*) dan encoder (*Label Encoder*).
+
+### Pengecekan outliers
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_3.png" />
+</p>
+
+<p align="center">Gambar 6. Visualisasi pengecekan outliers</p>
+
+Menurut gambar 6, terdapat outliers pada data kita. Outlier merupakan nilai yang jauh berbeda dari mayoritas data dalam dataset. Penghapusan outlier dapat meningkatkan mutu analisis dan model prediksi. Untuk mengidentifikasi dan menangani outlier, visualisasi dengan library ***Seaborn*** digunakan, diikuti dengan penerapan teknik **IQR** pada data.
+
+|  Sebelum  |  Sesudah  |
+|:---------:|:---------:|
+| (2200, 8) | (1846, 8) |
+
+<p>Tabel 2. Output hasil pengurangan outliers</p>
+
+
+
+> Namun, saat dilakukan pengecekan ulang pada distribusi label pada data (Gambar 7). Terdapat label yang hilang, sehingga dapat diasumsikan bahwa terdapat jenis tanaman yang memang berbeda cara penanganan nya dari jenis tanaman yang lain seperti yang telah dijelaskan pada bagian **Data Understanding**.
+
+<p align="center">
+  <img src="https://i.ibb.co.com/FLxPVfgS/image.png" />
+</p>
+
+<p align="center">Gambar 7. Distribusi label setelah penghapusan outliers</p>
 
 ### Split Data
 
@@ -270,11 +284,15 @@ Dari hasil Grid Search pada tabel 4, terlihat bahwa algoritma ***Random Forest**
 
 ## Evaluation
 
-Pada tahap evaluasi, kita akan menggunakan ***akurasi*** dan ***Confusion Matrix*** sebagai acuan untuk mengetahui apakah model yang dirancang telah memenuhi kebutuhan bisnis atau belum.
+Evaluasi dilakukan untuk mengetahui sejauh mana model yang dibangun dapat memenuhi kebutuhan bisnis yang telah dirumuskan pada tahap Business Understanding. Secara khusus, evaluasi ini bertujuan menjawab tiga hal: 
+
+1. apakah model mampu memberikan rekomendasi tanaman secara akurat,
+2. apakah pendekatan solusi berdampak pada permasalahan yang ada,
+3. apakah tujuan proyek telah tercapai.
 
 ### Accuracy
 
-Akurasi merupakan persentase prediksi yang benar dari total data.
+Akurasi merupakan metrik utama yang digunakan untuk mengukur performa model klasifikasi yang dibangun. Nilai akurasi menunjukkan proporsi prediksi yang sesuai dengan label sebenarnya dari total data uji.
 
 $$
 \text{Accuracy} = \frac{\text{Jumlah Prediksi Benar}}{\text{Total Jumlah Data}} = \frac{TP + TN}{TP + TN + FP + FN}
@@ -299,11 +317,15 @@ $$
 
 <p>Tabel 5. Hasil akurasi pada tiap model</p>
 
-Tabel 5 menunjukkan bahwa ke-3 model memiliki akurasi yang cukup tinggi, dan **Random Forest** memiliki tingkat akurasi tertinggi yaitu `0.98` dan disusul oleh **KNN** dan **Logistic Regression**.
+Hasil evaluasi akurasi pada tabel 5 tentang akurasi pada masing-masing model dapat dijelaskan sebagai berikut:
+
+- Random Forest memperoleh akurasi tertinggi yaitu 98.8%, diikuti oleh ***KNN*** dengan 97.0%, dan ***Logistic Regression*** dengan 93.9%.
+- Ketiga model menghasilkan akurasi yang tinggi (>93%), menunjukkan bahwa model mampu mengenali pola dari fitur-fitur seperti **N**, **P**, **K**, **suhu**, **kelembaban**, *pH*, dan **curah hujan** dengan baik.
+- Dengan akurasi tersebut, model telah memenuhi tujuan utama proyek, yaitu membangun sistem prediktif yang mampu merekomendasikan jenis tanaman secara akurat.
 
 ### Confusion Matrix
 
-Matriks yang menunjukkan berapa banyak data kelas A diprediksi sebagai kelas B. Pada proyek ini, confusion matrix sangat berguna untuk melihat apakah hasil prediksi sudah sesuai dengan data yang nyata.
+Untuk memahami lebih detail performa model, digunakan **Confusion Matrix** sebagai visualisasi kesalahan klasifikasi antar kelas.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/image_7.png" />
@@ -311,7 +333,11 @@ Matriks yang menunjukkan berapa banyak data kelas A diprediksi sebagai kelas B. 
 
 <p align="center">Gambar 7. Hasil confusion matrix</p>
 
-Gambar 7 memberikan menunjukkan baik **KNN** maupun **Random Forest** memberikan performa klasifikasi yang sangat baik untuk masalah ini, sedangkan **Logistic Regression** menunjukkan akurasi yang lebih rendah. Untuk penggunaan nyata dalam sistem rekomendasi tanaman, **KNN** dan **Random Forest** merupakan kandidat yang lebih tepat karena menghasilkan prediksi yang lebih konsisten dan akurat.
+Gambar 7 memperlihatkan konsistensi tinggi pada prediksi model ***Random Forest*** dan ***KNN***, dengan tingkat kesalahan klasifikasi yang rendah di hampir semua kelas, menunjukkan keandalannya dalam membedakan kebutuhan tanaman berdasarkan kondisi tanah dan iklim; **ini secara langsung menjawab problem statement tentang kesulitan pemilihan tanaman optimal berbasis data dengan meminimalkan risiko salah tanam melalui rekomendasi akurat.**
+
+## Kesimpulan
+
+Dapat disimpulkan model yang dibangun memberikan rekomendasi berbasis data yang mampu menggantikan pendekatan tradisional berbasis intuisi. Dengan akurasi tinggi, model ini mampu meningkatkan efisiensi pertanian melalui rekomendasi tanaman yang optimal, sekaligus mengurangi risiko inefisiensi sumber daya. Model ini memberikan nilai tambah sebagai alat bantu keputusan berbasis *Machine Learning*, yang berpotensi diintegrasikan ke dalam sistem pertanian presisi (*precision agriculture*) [3].
 
 ## Referensi
 
