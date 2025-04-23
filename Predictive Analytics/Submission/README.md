@@ -61,7 +61,7 @@ Dataset yang digunakan dalam proyek ini adalah **Crop Recommendation Dataset** y
 
 Exploratory Data Analysis (EDA) merupakan tahap awal analisis data untuk mengenali sifat-sifat utama, susunan, dan elemen penting dalam dataset sebelum analisis statistik atau prediksi yang lebih mendalam.
 
-Berikut adalah tahapan EDA yang telah saya lakukan:
+Berikut adalah tahapan EDA yang telah dilakukan:
 
 #### Hubungan antara label dengan fitur
 
@@ -81,7 +81,7 @@ Beberapa pemahan data yang dapat diambil dari visualisasi tersebut adalah:
 
 #### Pengecekan deskripsi dataset pada fitur numerikal
 
-Saya memisahkan fitur numerikal dan kategorikal, kemudian fitur numerikal di analisa menggunakan fungsi `describe()`.
+Pemisahan fitur numerikal dan kategorikal dilakukan, kemudian fitur numerikal di analisa menggunakan fungsi `describe()`.
 
 |       |      N      |      P      |      K      | temperature |   humidity  |      ph     |   rainfall  |
 |------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
@@ -106,7 +106,7 @@ Dari tabel 1 terlihat bahwa fitur `N` memiliki nilai minimum 0, namun tidak dapa
 
 <p align="center">Gambar 3. Distribusi label</p>
 
-Gambar 3 memperlihatkan kita bahwa distribusi label pada semua label seimbang yaitu di `100 data`.
+Gambar 3 memperlihatkan bahwa distribusi label pada semua label seimbang yaitu di `100 data`.
 
 #### Univariate Analysis
 
@@ -152,7 +152,7 @@ Pada tahap *Data Preparation*, pengecekan outliers akan dilakukan terlebih dahul
 
 <p align="center">Gambar 6. Visualisasi pengecekan outliers</p>
 
-Menurut gambar 6, terdapat outliers pada data kita. Outlier merupakan nilai yang jauh berbeda dari mayoritas data dalam dataset. Penghapusan outlier dapat meningkatkan mutu analisis dan model prediksi. Untuk mengidentifikasi dan menangani outlier, visualisasi dengan library ***Seaborn*** digunakan, diikuti dengan penerapan teknik **IQR** pada data.
+Menurut gambar 6, terdapat outliers pada data yang digunakan. Outlier merupakan nilai yang jauh berbeda dari mayoritas data dalam dataset. Penghapusan outlier dapat meningkatkan mutu analisis dan model prediksi. Untuk mengidentifikasi dan menangani outlier, visualisasi dengan library ***Seaborn*** digunakan, diikuti dengan penerapan teknik **IQR** pada data.
 
 |  Sebelum  |  Sesudah  |
 |:---------:|:---------:|
@@ -215,7 +215,7 @@ KNN adalah algoritma klasifikasi (dan regresi) yang bekerja dengan cara mencari 
     - Kinerja sangat bergantung pada pemilihan nilai K.
     - Rentan terhadap data yang tidak seimbang.
 
-Parameter yang Anda gunakan:
+Parameter yang digunakan:
 
 - `n_neighbors`: Menentukan jumlah tetangga terdekat yang akan dipertimbangkan untuk klasifikasi.
 
@@ -270,7 +270,7 @@ Parameter yang digunakan:
 
 ### GridSearch
 
-Untuk mendapatkan parameter model terbaik, *Grid Search* secara otomatis mencoba semua kombinasi parameter yang kita tentukan. Hal ini membantu kita menemukan setelan parameter optimal untuk model kita tanpa mencoba satu per satu secara manual.
+Untuk mendapatkan parameter model terbaik, *Grid Search* secara otomatis mencoba semua kombinasi parameter yang sudah tentukan. Hal ini membantu model menemukan setelan parameter optimal untuk model yang digunakan tanpa mencoba satu per satu secara manual.
 
 |        Model       | Best Score | Best Parameters                                                 |
 |:------------------:|:----------:|-----------------------------------------------------------------|
@@ -305,7 +305,7 @@ $$
 - **FP**: False Positives (prediksi salah untuk kelas positif)
 - **FN**: False Negatives (prediksi salah untuk kelas negatif)
 
-Untuk *multi-class classification*, kita tidak lagi pakai TP/TN/FP/FN secara eksplisit, tapi rumus sederhananya tetap:
+*multi-class classification*, tidak lagi menggunakan TP/TN/FP/FN secara eksplisit, tapi rumus sederhananya tetap:
 
 $$
 \text{Accuracy} = \frac{\text{Jumlah label yang diprediksi dengan benar}}{\text{Total jumlah sampel}}
