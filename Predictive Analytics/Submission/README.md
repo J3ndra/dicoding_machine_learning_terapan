@@ -66,7 +66,7 @@ Berikut adalah tahapan EDA yang telah saya lakukan:
 #### Hubungan antara label dengan fitur
 
 <p align="center">
-  <img src="https://i.ibb.co.com/d0StQBcN/image.png" />
+  <img src="https://github.com/J3ndra/dicoding_machine_learning_terapan/blob/main/Predictive%20Analytics/Images/Clipboard_04-23-2025_01.png?raw=true" />
 </p>
 
 <p align="center">Gambar 2. Hubungan antara label dengan fitur</p>
@@ -165,7 +165,7 @@ Menurut gambar 6, terdapat outliers pada data kita. Outlier merupakan nilai yang
 > Namun, saat dilakukan pengecekan ulang pada distribusi label pada data (Gambar 7). Terdapat label yang hilang, sehingga dapat diasumsikan bahwa terdapat jenis tanaman yang memang berbeda cara penanganan nya dari jenis tanaman yang lain seperti yang telah dijelaskan pada bagian **Data Understanding**.
 
 <p align="center">
-  <img src="https://i.ibb.co.com/FLxPVfgS/image.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Predictive%20Analytics/Images/Clipboard_04-23-2025_02.png" />
 </p>
 
 <p align="center">Gambar 7. Distribusi label setelah penghapusan outliers</p>
