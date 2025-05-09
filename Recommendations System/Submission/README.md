@@ -260,7 +260,9 @@ $$
 
 #### Pengujian pada film "Toy Story (1995)"
 
-|     | title                                                          | genre     | similarity1 |
+> Target genres: Comedy, Animation, Children's
+
+|     | title                                                          | genre     | similarity |
 | :-- | :------------------------------------------------------------- | :-------- | :---------- |
 | 1   | Aladdin and the King of Thieves (1996)                         | Animation | 1.0002      |
 | 2   | Aristocats, The (1970)                                         | Animation | 0.9373      |
@@ -277,17 +279,19 @@ Tabel 4. Hasil pengujian pada film "Toy Story (1995)"
 
 #### Pengujian pada film "You So Crazy (1994)"
 
-|     | title                                                        | genre  | similarity1 |
+> Target genres: Comedy
+
+|     | title                                                        | genre  | similarity |
 | :-- | :----------------------------------------------------------- | :----- | :---------- |
-| 1   | Birdcage, The (1996)                                       | Comedy | 1.02        |
-| 2   | Brothers McMullen, The (1995)                              | Comedy | 1.03        |
-| 3   | To Wong Foo, Thanks for Everything! Julie Newmar (1995)    | Comedy | 1.04        |
-| 4   | Billy Madison (1995)                                       | Comedy | 1.05        |
-| 5   | Clerks (1994)                                              | Comedy | 1.06        |
-| 6   | Ace Ventura: Pet Detective (1994)                          | Comedy | 1.07        |
-| 7   | Ref, The (1994)                                            | Comedy | 1.08        |
-| 8   | Theodore Rex (1995)                                        | Comedy | 1.09        |
-| 9   | Sgt. Bilko (1996)                                          | Comedy | 1.010       |
+| 1   | Birdcage, The (1996)                                       | Comedy | 1.0       |
+| 2   | Brothers McMullen, The (1995)                              | Comedy | 1.0        |
+| 3   | To Wong Foo, Thanks for Everything! Julie Newmar (1995)    | Comedy | 1.0        |
+| 4   | Billy Madison (1995)                                       | Comedy | 1.0        |
+| 5   | Clerks (1994)                                              | Comedy | 1.0        |
+| 6   | Ace Ventura: Pet Detective (1994)                          | Comedy | 1.0        |
+| 7   | Ref, The (1994)                                            | Comedy | 1.0        |
+| 8   | Theodore Rex (1995)                                        | Comedy | 1.0        |
+| 9   | Sgt. Bilko (1996)                                          | Comedy | 1.0       |
 | 10  | Kids in the Hall: Brain Candy (1996)                      | Comedy | 1.0         |
 
 Tabel 5. hasil pengujian pada film "You So Crazy (1994)"
