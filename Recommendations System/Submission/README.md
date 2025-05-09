@@ -44,18 +44,18 @@ Dataset yang digunakan dalam proyek ini adalah **MovieLens 100k Dataset** yang b
 
 Karena dataset memiliki format yang berbeda-beda, penelitian ini memerlukan `Data Loading` untuk menyiapkan data untuk menjadi data yang siap untuk dikembangkan. Berikut adalah data yang akan digunakan pada penelitian ini:
 
-- User (Jumlah pengguna: 943)
+- User (Jumlah pengguna: 943 | 5 Kolom)
   - `user_id`: ID pengguna
   - `age`: umur pengguna
   - `sex`: jenis kelamin pengguna
   - `occupation`: pekerjaan pengguna
   - `zip_code`: kode alamat pengguna
 
-- Genre (Jumlah genre: 19)
+- Genre (Jumlah genre: 19 | 2 Kolom)
   - `genre_name`: nama genre
   - `genre_id`: ID genre
 
-- Movie (Jumlah film: 1682)
+- Movie (Jumlah film: 1682 | 24 Kolom)
   - `movie_id`: ID film
   - `movie_title`: judul film
   - `release_date`: tanggal terbit film
@@ -63,11 +63,15 @@ Karena dataset memiliki format yang berbeda-beda, penelitian ini memerlukan `Dat
   - `IMDb_URL`: URL IMDb film
   - Sisa dari kolom `movie` adalah *One-hot encoded* genre
 
-- Rating (Jumlah rating: 100000 / 100k)
+- Rating (Jumlah rating: 100000 / 100k | 4 Kolom)
   - `user_id`: ID user
   - `movie_id`: ID film
   - `rating`: rating yang diberikan user terhadap film
   - `unix_timestamps`: tanggal rating diberikan oleh user dalam bentuk *unix*
+
+> Rating memiliki 2 data yaitu `ratings_base` dan `ratings_test`. Dimana jumlah rating sebelumnya merupakan gabungan dari 2 data tersebut.
+
+Semua data yang digunakan tidak memiliki nilai yang kosong atau `null`
 
 ### Exploratory Data Analysis (EDA)
 
@@ -105,7 +109,7 @@ Total genre adalah 19 genre dengan jumlah film terbanyak terdapat pada genre **D
 
 <p align="center">Gambar 4. Distribusi nilai rating</p>
 
-Gambar 4 menunjukkan bahwa nilai rating terbanyak terdapat pada rating `4` dengan rata-rata rating adalah `3.53`.
+Gambar 4 menunjukkan bahwa nilai distribusi rating yang baik dengan nilai terendah adalah `1` dan nilai tertinggi adalah `5`, distribusi rating terbanyak terdapat pada rating `4` dengan rata-rata rating adalah `3.53`.
 
 ## Data Preprocessing && Data Preparation
 
@@ -113,7 +117,26 @@ Gambar 4 menunjukkan bahwa nilai rating terbanyak terdapat pada rating `4` denga
 
 #### Pembersihan Genre yang Tidak Diketahui
 
-Karena genre **Unknown** hanya memiliki total 2 film, maka genre **Unknown** akan dihapus untuk menjaga keseimbangan data.
+Karena genre `Unknown` hanya memiliki total 2 film, maka genre `Unknown` akan dihapus untuk menjaga keseimbangan data dengan cara:
+
+1. Mencari dan meninjau apakah *movies* dengan *genre* `Unknown` memiliki genre `Unknown` saja atau memiliki genre yang lain
+
+```py
+# output
+Number of movies with 'unknown' genre: 2
+
+Details of unknown genre movies:
+      movie_id          movie_title release_date
+266        267              unknown          NaN
+1372      1373  Good Morning (1971)   4-Feb-1971
+
+Movies with 'unknown' genre that also have other genres: 0
+Movies with ONLY 'unknown' genre: 2
+```
+
+2. Ternyata, terdapat *movies* dengan *title* `unknown` sehingga *movie* tersebut akan dihapus. Lalu, terdapat *movie* dengan *genre* `unknown` yang berjudul `Good Morning (1971)`. Tinjauan lanjutan akan mencari apakah *movie* tersebut memiliki *genre* yang lain. Karena tidak terdapat *genre* lain pada *movie* tersebut, maka *movie* tersebut akan dihapus.
+
+> Setelah menghapus *genre* `unknown` dan *movie* yang memiliki genre `unknown`. Jumlah *movie* sebelumnya berjumlah `1682` menjadi `1680` dan jumlah *genre* yang sebelumnya `19` menjadi `18`.
 
 #### Pengolahan Data untuk Content Based Filtering
 
@@ -121,7 +144,7 @@ Pada pendekatan *Content-Based Filtering*, data diolah melalui beberapa tahap pe
 
 1. **Ekstraksi Fitur Genre**: Data film yang berisi encoding one-hot untuk 18 genre digunakan sebagai basis utama. Setiap film memiliki representasi biner (0 atau 1) untuk setiap genre yang menandakan apakah film tersebut termasuk dalam kategori genre tersebut.
 
-2. **Konversi Data Genre ke Format Teks**: Untuk memudahkan pemrosesan, data genre yang awalnya berbentuk encoding one-hot diubah menjadi string teks yang berisi daftar genre yang dimiliki setiap film, seperti "Comedy Drama Romance".
+2. **Konversi Data Genre ke Format Teks**: Karena proyek ini akan menggunakan [**TF-IDF**](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html), kita akan menggabungkan semua *One-hot Encoded genre* yang terdapat pada data *movie* menjadi satu kolom bernama *genres* seperti `Animation Children's Comedy` atau `Action Advanture Thriller`.
 
 |   | movie_id |       movie_title | Action | Adventure | Animation | Children's | Comedy | Crime | Documentary | Drama | ... | Horror | Musical | Mystery | Romance | Sci-Fi | Thriller | War | Western | release_year |                      genres |
 |--:|---------:|------------------:|-------:|----------:|----------:|-----------:|-------:|------:|------------:|------:|----:|-------:|--------:|--------:|--------:|-------:|---------:|----:|--------:|-------------:|----------------------------:|
@@ -157,7 +180,7 @@ Tabel 2. Hasil pengolahan data untuk `Collaborative Filtering`
 
 ### Data Preparation
 
-Pada tahap preparation, hanya dilakukan pengecekan `null` values pada data yang telah diolah.
+Pada tahap preparation, hanya dilakukan pengecekan `null` values pada data yang telah diolah dan karena tidak terdapat nilai kosong atau `null`, maka tidak perlu dilakukan penanganan missing values.
 
 ## Modeling
 
@@ -203,9 +226,11 @@ Tabel 3 menunjukkan kemiripan genre antar film. Nilai mendekati 1 berarti film s
 
 ### Collaborative Filtering
 
-Pada model Collaborative Filtering, informasi interaksi antara pengguna dan film sangat dibutuhkan agar model dapat bekerja dengan baik. Dalam implementasinya, langkah pertama adalah menyiapkan data rating yang menghubungkan user dengan film. Kemudian dilakukan pembagian data menjadi train 80% dan validasi 20% menggunakan train_test_split.
+Pada model Collaborative Filtering, informasi interaksi antara pengguna dan film sangat dibutuhkan agar model dapat bekerja dengan baik. Dalam implementasinya, langkah pertama adalah menyiapkan data rating yang menghubungkan user dengan film. Kemudian dilakukan pembagian data menjadi train 80% dan validasi 20% menggunakan [*train_test_split*](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html) dengan jumlah data pada data latih adalah `80000` dan data uji `20000`.
 
-Langkah terakhir adalah membangun model menggunakan *Neural Network* melalui kelas *RecommenderNet* yang mengimplementasikan layer embedding untuk user dan film
+Kelas model yang akan dibagun akan menggunakan [*Keras Model Class*](https://keras.io/api/models/model/) yang terinspirasi dari [*Collaborative Filtering MovieLens* dari Keras](https://keras.io/examples/structured_data/collaborative_filtering_movielens/). Model ini akan memanfaatkan embedding layers untuk merepresentasikan pengguna dan film dalam ruang vektor laten, sehingga memungkinkan untuk mempelajari preferensi pengguna dan karakteristik film secara tersembunyi."
+
+Sebelum model dilatih, proyek ini akan menggunakan [*Callbacks*](https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/Callback) [*EarlyStopping*](https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping) jika tidak terdapat peningkatan terhadap `val_root_mean_squared_error` dengan *patience* 5 dan melatih model
 
 *Collaborative Filtering* memiliki beberapa kelebihan dan kekurang seperti:
 
@@ -225,51 +250,57 @@ Dalam pendekatan *Content-Based Filtering*, metrik evaluasi utama yang digunakan
 
 ### Content-Based Filtering
 
-Pengujian dilakukan menggunakan 2 film, yaitu "Toy Story (1995)" dan "You So Crazy (1994)".
+Pada evaluasi content based filtering menggunakan metrik precision content based filtering untuk menghitung precision model sistem yang telah dibuat sebelumnya. Rumus perhitungan precision dapat dilihat pada rumus 3 dengan pengujian dilakukan menggunakan 2 film, yaitu "Toy Story (1995)" dan "You So Crazy (1994)".
+
+$$
+\text{Recall at } K = \frac{\text{Number of relevant items in } K}{\text{Total number of relevant items}}
+$$
+
+<p align="center">Rumus 3. Rumus precision</p>
 
 #### Pengujian pada film "Toy Story (1995)"
 
-| Judul Film                                                       | ID    | Similarity |
-|-------------------------------------------------------------------|-------|------------|
-| Aladdin and the King of Thieves (1996)                            | 422   | 1.0        |
-| Aristocats, The (1970)                                          | 102   | 0.937      |
-| Pinocchio (1940)                                                | 404   | 0.937      |
-| Sword in the Stone, The (1963)                                  | 625   | 0.937      |
-| Fox and the Hound, The (1981)                                   | 946   | 0.937      |
-| Winnie the Pooh and the Blustery Day (1968)                      | 969   | 0.937      |
-| Balto (1995)                                                    | 1066  | 0.937      |
-| Oliver & Company (1988)                                         | 1078  | 0.937      |
-| Swan Princess, The (1994)                                       | 1409  | 0.937      |
-| Land Before Time III: The Time of the Great Giving (1995) (V) | 1412  | 0.937      |
+|     | title                                                          | genre     | similarity1 |
+| :-- | :------------------------------------------------------------- | :-------- | :---------- |
+| 1   | Aladdin and the King of Thieves (1996)                         | Animation | 1.0002      |
+| 2   | Aristocats, The (1970)                                         | Animation | 0.9373      |
+| 3   | Pinocchio (1940)                                               | Animation | 0.9374      |
+| 4   | Sword in the Stone, The (1963)                                 | Animation | 0.9375      |
+| 5   | Fox and the Hound, The (1981)                                  | Animation | 0.9376      |
+| 6   | Winnie the Pooh and the Blustery Day (1968)                     | Animation | 0.9377      |
+| 7   | Balto (1995)                                                   | Animation | 0.9378      |
+| 8   | Oliver & Company (1988)                                        | Animation | 0.9379      |
+| 9   | Swan Princess, The (1994)                                      | Animation | 0.93710     |
+| 10  | Land Before Time III: The Time of the Great Giving (1995) (V) | Animation | 0.937       |
 
 Tabel 4. Hasil pengujian pada film "Toy Story (1995)"
 
 #### Pengujian pada film "You So Crazy (1994)"
 
-| Judul Film                                          | ID    | Similarity |
-|------------------------------------------------------|-------|------------|
-| Birdcage, The (1996)                               | 25    | 1.0        |
-| Brothers McMullen, The (1995)                      | 26    | 1.0        |
-| To Wong Foo, Thanks for Everything! Julie Newmar (1995) | 40    | 1.0        |
-| Billy Madison (1995)                               | 41    | 1.0        |
-| Clerks (1994)                                      | 42    | 1.0        |
-| Ace Ventura: Pet Detective (1994)                  | 67    | 1.0        |
-| Ref, The (1994)                                    | 85    | 1.0        |
-| Theodore Rex (1995)                                | 104   | 1.0        |
-| Sgt. Bilko (1996)                                  | 105   | 1.0        |
-| Kids in the Hall: Brain Candy (1996)               | 108   | 1.0        |
+|     | title                                                        | genre  | similarity1 |
+| :-- | :----------------------------------------------------------- | :----- | :---------- |
+| 1   | Birdcage, The (1996)                                       | Comedy | 1.02        |
+| 2   | Brothers McMullen, The (1995)                              | Comedy | 1.03        |
+| 3   | To Wong Foo, Thanks for Everything! Julie Newmar (1995)    | Comedy | 1.04        |
+| 4   | Billy Madison (1995)                                       | Comedy | 1.05        |
+| 5   | Clerks (1994)                                              | Comedy | 1.06        |
+| 6   | Ace Ventura: Pet Detective (1994)                          | Comedy | 1.07        |
+| 7   | Ref, The (1994)                                            | Comedy | 1.08        |
+| 8   | Theodore Rex (1995)                                        | Comedy | 1.09        |
+| 9   | Sgt. Bilko (1996)                                          | Comedy | 1.010       |
+| 10  | Kids in the Hall: Brain Candy (1996)                      | Comedy | 1.0         |
 
 Tabel 5. hasil pengujian pada film "You So Crazy (1994)"
 
 ### Collaborative Filtering
 
-Dalam pendekatan *Collaborative Filtering*, metrik evaluasi utama yang digunakan adalah *Root Mean Square Error* (**RMSE**). Nilai **RMSE** yang lebih rendah mengindikasikan kinerja model yang lebih akurat dalam memprediksi rating pengguna. Rumus perhitungan **RMSE** dapat dilihat di rumus 3.
+Dalam pendekatan *Collaborative Filtering*, metrik evaluasi utama yang digunakan adalah *Root Mean Square Error* (**RMSE**). Nilai **RMSE** yang lebih rendah mengindikasikan kinerja model yang lebih akurat dalam memprediksi rating pengguna. Rumus perhitungan **RMSE** dapat dilihat di rumus 4.
 
 $$
 RMSE = \sqrt{\frac{\sum_{i=1}^{n} (\hat{y}_i - y_i)^2}{n}}
 $$
 
-<p align="center">Rumus 3. Rumus RMSE</p>
+<p align="center">Rumus 4. Rumus RMSE</p>
 
 <p align="center">
   <img src="../Images/rmse_epoch.png" />
@@ -277,41 +308,41 @@ $$
 
 <p align="center">Gambar 5. Visualisasi epochs RMSE</p>
 
-Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai RMSE yang menurun signifikan dari `0.24` menjadi sekitar `0.20` dan loss dari `0.058` menjadi `0.040`, mencapai performa optimal pada epoch ke-13 (ditandai dengan titik merah) di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
+Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai *validation RMSE* yang menurun signifikan dari `0.2097` menjadi sekitar `0.1977` dan *validation loss* dari `0.0442` menjadi `0.0398`, mencapai performa optimal pada epoch ke-4 (ditandai dengan titik merah) dari total 10 epoch di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
 
 Pengujian dilakukan menggunakan 2 user, yaitu user dengan ID "1" dan user dengan ID "21"
 
 #### Pengujian pada user dengan ID "1"
 
-| Judul Film                                                    | Tahun Rilis | Predicted Rating |
-|---------------------------------------------------------------|-------------|------------------|
-| Casablanca                                                    | 1942        | 4.31/5.00        |
-| One Flew Over the Cuckoo's Nest                               | 1975        | 4.29/5.00        |
-| Manchurian Candidate, The                                     | 1962        | 4.27/5.00        |
-| Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb | 1963        | 4.26/5.00        |
-| Boot, Das                                                     | 1981        | 4.21/5.00        |
-| Schindler's List                                              | 1993        | 4.19/5.00        |
-| Chinatown                                                     | 1974        | 4.16/5.00        |
-| Close Shave, A                                                | 1995        | 4.13/5.00        |
-| Thin Man, The                                                 | 1934        | 4.11/5.00        |
-| Paths of Glory                                                | 1957        | 4.11/5.00        |
+|     | Judul Film                                                              | Rating Prediksi |
+| :-- | :---------------------------------------------------------------------- | :-------------- |
+| 1   | Casablanca (1942)                                                     | 4.28/5.00       |
+| 2   | Vertigo (1958)                                                        | 4.11/5.00       |
+| 3   | North by Northwest (1959)                                             | 4.11/5.00       |
+| 4   | Rear Window (1954)                                                    | 4.08/5.00       |
+| 5   | To Kill a Mockingbird (1962)                                          | 4.01/5.00       |
+| 6   | Maltese Falcon, The (1941)                                            | 4.01/5.00       |
+| 7   | One Flew Over the Cuckoo's Nest (1975)                                | 4.00/5.00       |
+| 8   | It's a Wonderful Life (1946)                                          | 3.99/5.00       |
+| 9   | African Queen, The (1951)                                             | 3.99/5.00       |
+| 10  | Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963) | 3.94/5.00       |
 
 Tabel 6. hasil pengujian pada user dengan ID "1"
 
 #### Pengujian pada user dengan ID "21"
 
-| Judul Film                                                    | Tahun Rilis | Predicted Rating |
-|---------------------------------------------------------------|-------------|------------------|
-| Wrong Trousers, The                                           | 1993        | 4.01/5.00        |
-| Casablanca                                                    | 1942        | 3.93/5.00        |
-| One Flew Over the Cuckoo's Nest                               | 1975        | 3.89/5.00        |
-| Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb | 1963        | 3.86/5.00        |
-| 12 Angry Men                                                  | 1957        | 3.83/5.00        |
-| Raiders of the Lost Ark                                       | 1981        | 3.80/5.00        |
-| To Kill a Mockingbird                                         | 1962        | 3.76/5.00        |
-| Empire Strikes Back, The                                      | 1980        | 3.71/5.00        |
-| Godfather: Part II, The                                       | 1974        | 3.68/5.00        |
-| Shawshank Redemption, The                                     | 1994        | 3.66/5.00        |
+|     | Judul Film                               | Rating Prediksi |
+| :-- | :--------------------------------------- | :-------------- |
+| 1   | Shawshank Redemption, The (1994)         | 3.85/5.00       |
+| 2   | Casablanca (1942)                        | 3.64/5.00       |
+| 3   | Schindler's List (1993)                  | 3.64/5.00       |
+| 4   | Titanic (1997)                           | 3.55/5.00       |
+| 5   | Rear Window (1954)                       | 3.54/5.00       |
+| 6   | Raiders of the Lost Ark (1981)           | 3.44/5.00       |
+| 7   | Vertigo (1958)                           | 3.38/5.00       |
+| 8   | North by Northwest (1959)                | 3.38/5.00       |
+| 9   | Good Will Hunting (1997)                 | 3.34/5.00       |
+| 10  | Usual Suspects, The (1995)               | 3.34/5.00       |
 
 Tabel 7. hasil pengujian pada user dengan ID "21"
 
