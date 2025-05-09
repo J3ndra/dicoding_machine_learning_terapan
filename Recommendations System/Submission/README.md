@@ -84,7 +84,7 @@ Berikut adalah tahapan EDA yang telah dilakukan:
 Eksplorasi data pada users akan memperlihatkan distribusi pemberian rating tiap user
 
 <p align="center">
-  <img src="../Images/Users.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Recommendations%20System/Images/Users.png" />
 </p>
 
 <p align="center">Gambar 2. Distribusi rating tiap user</p>
@@ -94,7 +94,7 @@ Dengan rata-rata jumlah penilaian tiap user adalah `106` rating, dengan pemberia
 #### Genres
 
 <p align="center">
-  <img src="../Images/Genres.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Recommendations%20System/Images/Genres.png" />
 </p>
 
 <p align="center">Gambar 3. Jumlah film tiap genre</p>
@@ -104,7 +104,7 @@ Total genre adalah 19 genre dengan jumlah film terbanyak terdapat pada genre **D
 #### Ratings
 
 <p align="center">
-  <img src="../Images/Ratings.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Recommendations%20System/Images/Ratings.png" />
 </p>
 
 <p align="center">Gambar 4. Distribusi nilai rating</p>
@@ -303,12 +303,12 @@ $$
 <p align="center">Rumus 4. Rumus RMSE</p>
 
 <p align="center">
-  <img src="../Images/rmse_epoch.png" />
+  <img src="https://raw.githubusercontent.com/J3ndra/dicoding_machine_learning_terapan/refs/heads/main/Recommendations%20System/Images/rmse_epoch.png" />
 </p>
 
 <p align="center">Gambar 5. Visualisasi epochs RMSE</p>
 
-Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai *validation RMSE* yang menurun signifikan dari `0.2097` menjadi sekitar `0.1977` dan *validation loss* dari `0.0442` menjadi `0.0398`, mencapai performa optimal pada epoch ke-4 (ditandai dengan titik merah) dari total 10 epoch di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
+Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai *validation RMSE* yang menurun signifikan dari `0.2097` menjadi sekitar `0.1977` dan *validation loss* dari `0.0442` menjadi `0.0398`, mencapai performa optimal pada epoch ke-5 (ditandai dengan titik merah) dari total 10 epoch di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
 
 Pengujian dilakukan menggunakan 2 user, yaitu user dengan ID "1" dan user dengan ID "21"
 
