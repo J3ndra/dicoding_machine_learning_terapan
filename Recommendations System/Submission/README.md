@@ -180,7 +180,43 @@ Tabel 2. Hasil pengolahan data untuk `Collaborative Filtering`
 
 ### Data Preparation
 
-Pada tahap preparation, hanya dilakukan pengecekan `null` values pada data yang telah diolah dan karena tidak terdapat nilai kosong atau `null`, maka tidak perlu dilakukan penanganan missing values.
+Dalam menyiapkan data agar dapat diolah oleh model *Content-Based Filtering* dan juga *Collaborative Filtering* perlu dilakukan beberapa tahapan yaitu
+
+- **Pengecekan missing values**
+  
+  Tidak terdapat missing values pada kedua data yang telah diolah, menandakan tidak perlu adanya penanganan missing values
+
+- **Content-Based data preparation**
+
+  Langkah awal yang ditempuh pada data *Content-Based Filtering* adalah mentransformasikan data genre film menjadi representasi vektor numerik. Proses ini dilakukan dengan memanfaatkan [*TfidfVectorizer*](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) untuk mengukur frekuensi dan memberikan bobot pada setiap genre dalam film, yang kemudian diaplikasikan (fit) dan diubah (transform) menjadi sebuah matriks **TF-IDF** menggunakan [*Cosine Similarity*](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html).
+
+  $$
+  \text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}
+  $$
+
+  <p align="center">Rumus 1. Rumus Consine Similarity</p>
+
+  |                      | war | drama | western |  fi | mystery | action | children | horror | crime |   comedy |
+  |---------------------:|----:|------:|--------:|----:|--------:|-------:|---------:|-------:|------:|---------:|
+  |          movie_title |     |       |         |     |         |        |          |        |       |          |
+  |        Grease (1978) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.385700 |
+  | Dirty Dancing (1987) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
+  |    Home Alone (1990) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.854178 |    0.0 |   0.0 | 0.519981 |
+  |          Nell (1994) | 0.0 |   1.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
+  |   Mighty, The (1998) | 0.0 |   1.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
+
+  Tabel 3. Hasil *Cosine Similarity*
+
+  Tabel 3 menunjukkan kemiripan genre antar film. Nilai mendekati 1 berarti film sangat mirip dengan genre kolom, sedangkan mendekati 0 berarti tidak mirip dimana:
+
+  - Grease: Cukup mirip dengan comedy.
+  - Dirty Dancing: Tidak mirip dengan genre yang ada.
+  - Home Alone: Sangat mirip dengan children dan cukup mirip dengan comedy.
+  - Nell & Mighty: Identik dengan genre drama.
+
+- **Collaborative data preparation**
+
+  Pada *Collaborative filtering* data, dilakukan pembagian data menjadi train 80% dan validasi 20% menggunakan [*train_test_split*](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html) dengan jumlah data pada data latih adalah `79992` dan data uji `19998`.
 
 ## Modeling
 
@@ -188,31 +224,7 @@ Dalam proyek ini, tahapan pemodelan memanfaatkan dua pendekatan algoritmik utama
 
 ### Content-Based Filtering
 
-Dalam proses pembentukan model *Content-Based Filtering*, langkah awal yang ditempuh adalah mentransformasikan data genre film menjadi representasi vektor numerik. Proses ini dilakukan dengan memanfaatkan [*TfidfVectorizer*](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) untuk mengukur frekuensi dan memberikan bobot pada setiap genre dalam film, yang kemudian diaplikasikan (fit) dan diubah (transform) menjadi sebuah matriks **TF-IDF** menggunakan [*Cosine Similarity*](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html).
-
-$$
-\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}
-$$
-
-<p align="center">Rumus 1. Rumus Consine Similarity</p>
-
-|                      | war | drama | western |  fi | mystery | action | children | horror | crime |   comedy |
-|---------------------:|----:|------:|--------:|----:|--------:|-------:|---------:|-------:|------:|---------:|
-|          movie_title |     |       |         |     |         |        |          |        |       |          |
-|        Grease (1978) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.385700 |
-| Dirty Dancing (1987) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
-|    Home Alone (1990) | 0.0 |   0.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.854178 |    0.0 |   0.0 | 0.519981 |
-|          Nell (1994) | 0.0 |   1.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
-|   Mighty, The (1998) | 0.0 |   1.0 |     0.0 | 0.0 |     0.0 |    0.0 | 0.000000 |    0.0 |   0.0 | 0.000000 |
-
-Tabel 3. Hasil *Cosine Similarity*
-
-Tabel 3 menunjukkan kemiripan genre antar film. Nilai mendekati 1 berarti film sangat mirip dengan genre kolom, sedangkan mendekati 0 berarti tidak mirip dimana:
-
-- Grease: Cukup mirip dengan comedy.
-- Dirty Dancing: Tidak mirip dengan genre yang ada.
-- Home Alone: Sangat mirip dengan children dan cukup mirip dengan comedy.
-- Nell & Mighty: Identik dengan genre drama.
+Dalam proses pembentukan model *Content-Based Filtering*, salah satu langkah penting adalah membangun mekanisme yang mampu menerima sebuah judul film dan kemudian merekomendasikan film-film lain yang dianggap mirip berdasarkan analisis konten film tersebut, sekaligus mengukur seberapa relevan rekomendasi tersebut berdasarkan kategori genre yang ada. 
 
 *Content-Based Filtering* memiliki beberapa kelebihan dan kekurang seperti:
 
@@ -224,9 +236,32 @@ Tabel 3 menunjukkan kemiripan genre antar film. Nilai mendekati 1 berarti film s
   - Membutuhkan informasi genre yang lengkap
   - Sulit menemukan film baru di luar selera
 
+Rekomendasi 10 film berdasarkan *Content Based Filtering* tersedia di tabel 5, dengan film sumber rekomendasi tertera di tabel 4.
+
+| movie_id | title            | genres                        |
+|----------|------------------|-------------------------------|
+| 0        | Toy Story (1995) | Animation, Comedy, Children's |
+
+Tabel 4. Data uji coba
+
+| title                                                                   | genre     |
+|-------------------------------------------------------------------------|-----------|
+| Aladdin and the King of Thieves (1996)                                  | Animation |
+| Aristocats, The (1970)                                                  | Animation |
+| Pinocchio (1940)                                                        | Animation |
+| Sword in the Stone, The (1963)                                          | Animation |
+| Fox and the Hound, The (1981)                                           | Animation |
+| Winnie the Pooh and the Blustery Day (1968)                              | Animation |
+| Balto (1995)                                                            | Animation |
+| Oliver & Company (1988)                                                 | Animation |
+| Swan Princess, The (1994)                                               | Animation |
+| Land Before Time III: The Time of the Great Giving (1995) (V)            | Animation |
+
+Tabel 5. Hasil rekomendasi *Content-Based Filtering*
+
 ### Collaborative Filtering
 
-Pada model Collaborative Filtering, informasi interaksi antara pengguna dan film sangat dibutuhkan agar model dapat bekerja dengan baik. Dalam implementasinya, langkah pertama adalah menyiapkan data rating yang menghubungkan user dengan film. Kemudian dilakukan pembagian data menjadi train 80% dan validasi 20% menggunakan [*train_test_split*](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html) dengan jumlah data pada data latih adalah `80000` dan data uji `20000`.
+Pada model Collaborative Filtering, informasi interaksi antara pengguna dan film sangat dibutuhkan agar model dapat bekerja dengan baik.
 
 Kelas model yang akan dibagun akan menggunakan [*Keras Model Class*](https://keras.io/api/models/model/) yang terinspirasi dari [*Collaborative Filtering MovieLens* dari Keras](https://keras.io/examples/structured_data/collaborative_filtering_movielens/). Model ini akan memanfaatkan embedding layers untuk merepresentasikan pengguna dan film dalam ruang vektor laten, sehingga memungkinkan untuk mempelajari preferensi pengguna dan karakteristik film secara tersembunyi."
 
@@ -243,6 +278,42 @@ Sebelum model dilatih, proyek ini akan menggunakan [*Callbacks*](https://www.ten
   - Sulit merekomendasikan film baru atau ke pengguna baru yang belum ada ratingnya.
   - Jika banyak pengguna hanya memberi rating sedikit film, datanya jadi kurang lengkap.
   - Kurang merekomendasikan film yang unik atau *niche* jika tidak terdapat banyak pengguna yang menyukai film tersebut.
+
+Pengujian dilakukan menggunakan 2 user, yaitu rekomendasi user dengan ID "1" yang tertera pada tabel 6 dan rekomendasi user dengan ID "21" yang tertera pada tabel 7.
+
+#### Pengujian pada user dengan ID "1"
+
+|    | Title                                      | Predicted Rating |
+|----|--------------------------------------------|------------------|
+| 1  | Schindler's List (1993)                    | 4.44/5.00        |
+| 2  | Titanic (1997)                             | 4.35/5.00        |
+| 3  | Close Shave, A (1995)                      | 4.20/5.00        |
+| 4  | As Good As It Gets (1997)                 | 4.20/5.00        |
+| 5  | Apt Pupil (1998)                           | 4.18/5.00        |
+| 6  | L.A. Confidential (1997)                   | 4.16/5.00        |
+| 7  | To Kill a Mockingbird (1962)               | 4.12/5.00        |
+| 8  | Secrets & Lies (1996)                      | 4.12/5.00        |
+| 9  | Mrs. Brown (Her Majesty, Mrs. Brown) (1997) | 4.08/5.00        |
+| 10 | Casablanca (1942)                          | 4.08/5.00        |
+
+Tabel 6. hasil pengujian pada user dengan ID "1"
+
+#### Pengujian pada user dengan ID "21"
+
+|    | Title                                                              | Predicted Rating |
+|----|--------------------------------------------------------------------|------------------|
+| 1  | Shawshank Redemption, The (1994)                                   | 3.83/5.00        |
+| 2  | Usual Suspects, The (1995)                                         | 3.78/5.00        |
+| 3  | One Flew Over the Cuckoo's Nest (1975)                             | 3.74/5.00        |
+| 4  | Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963) | 3.65/5.00        |
+| 5  | Blade Runner (1982)                                                | 3.64/5.00        |
+| 6  | Casablanca (1942)                                                  | 3.64/5.00        |
+| 7  | Lawrence of Arabia (1962)                                          | 3.63/5.00        |
+| 8  | Boot, Das (1981)                                                   | 3.58/5.00        |
+| 9  | Fugitive, The (1993)                                               | 3.57/5.00        |
+| 10 | Schindler's List (1993)                                            | 3.56/5.00        |
+
+Tabel 7. hasil pengujian pada user dengan ID "21"
 
 ## Evaluasi
 
@@ -275,7 +346,9 @@ $$
 | 9   | Swan Princess, The (1994)                                      | Animation | 0.93710     |
 | 10  | Land Before Time III: The Time of the Great Giving (1995) (V) | Animation | 0.937       |
 
-Tabel 4. Hasil pengujian pada film "Toy Story (1995)"
+Tabel 8. Hasil pengujian pada film "Toy Story (1995)"
+
+Tabel 8 menunjukkan bahwa film **Toy Story (1995)** memiliki 3 *genre* yaitu `Comedy, Animation, Children's` dimana film **Aladdin and the King of Thieves (1996)** memiliki 3 *genre* yang sama sehingga memiliki *score similarity* mencapai `1.0`. Sedangkan film yang lain hanya memiliki 2 *genre* yang sama, maka dari itu *cosine similarity* hanya memiliki score `0.937`.
 
 #### Pengujian pada film "You So Crazy (1994)"
 
@@ -294,7 +367,9 @@ Tabel 4. Hasil pengujian pada film "Toy Story (1995)"
 | 9   | Sgt. Bilko (1996)                                          | Comedy | 1.0       |
 | 10  | Kids in the Hall: Brain Candy (1996)                      | Comedy | 1.0         |
 
-Tabel 5. hasil pengujian pada film "You So Crazy (1994)"
+Tabel 9. hasil pengujian pada film "You So Crazy (1994)"
+
+Tabel 9 menunjukkan bahwa semua film yang direkomendasikan memiliki *score similarity* **1.0**, karena film yang ingin direkomendasikan hanya memiliki 1 genre yang `Comedy`.
 
 ### Collaborative Filtering
 
@@ -312,43 +387,10 @@ $$
 
 <p align="center">Gambar 5. Visualisasi epochs RMSE</p>
 
-Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai *validation RMSE* yang menurun signifikan dari `0.2097` menjadi sekitar `0.1977` dan *validation loss* dari `0.0442` menjadi `0.0398`, mencapai performa optimal pada epoch ke-5 (ditandai dengan titik merah) dari total 10 epoch di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
+Gambar 5. menunjukkan performa model Collaborative Filtering dengan nilai *validation RMSE* yang menurun signifikan dari `0.2125` menjadi sekitar `0.1989` dan *validation loss* dari `0.0454` menjadi `0.0400`, mencapai performa optimal pada epoch ke-6 (ditandai dengan titik merah) dari total 11 epoch di mana early stopping diaktifkan, menunjukkan model yang efektif dengan generalisasi baik tanpa tanda-tanda overfitting.
 
-Pengujian dilakukan menggunakan 2 user, yaitu user dengan ID "1" dan user dengan ID "21"
 
-#### Pengujian pada user dengan ID "1"
-
-|     | Judul Film                                                              | Rating Prediksi |
-| :-- | :---------------------------------------------------------------------- | :-------------- |
-| 1   | Casablanca (1942)                                                     | 4.28/5.00       |
-| 2   | Vertigo (1958)                                                        | 4.11/5.00       |
-| 3   | North by Northwest (1959)                                             | 4.11/5.00       |
-| 4   | Rear Window (1954)                                                    | 4.08/5.00       |
-| 5   | To Kill a Mockingbird (1962)                                          | 4.01/5.00       |
-| 6   | Maltese Falcon, The (1941)                                            | 4.01/5.00       |
-| 7   | One Flew Over the Cuckoo's Nest (1975)                                | 4.00/5.00       |
-| 8   | It's a Wonderful Life (1946)                                          | 3.99/5.00       |
-| 9   | African Queen, The (1951)                                             | 3.99/5.00       |
-| 10  | Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963) | 3.94/5.00       |
-
-Tabel 6. hasil pengujian pada user dengan ID "1"
-
-#### Pengujian pada user dengan ID "21"
-
-|     | Judul Film                               | Rating Prediksi |
-| :-- | :--------------------------------------- | :-------------- |
-| 1   | Shawshank Redemption, The (1994)         | 3.85/5.00       |
-| 2   | Casablanca (1942)                        | 3.64/5.00       |
-| 3   | Schindler's List (1993)                  | 3.64/5.00       |
-| 4   | Titanic (1997)                           | 3.55/5.00       |
-| 5   | Rear Window (1954)                       | 3.54/5.00       |
-| 6   | Raiders of the Lost Ark (1981)           | 3.44/5.00       |
-| 7   | Vertigo (1958)                           | 3.38/5.00       |
-| 8   | North by Northwest (1959)                | 3.38/5.00       |
-| 9   | Good Will Hunting (1997)                 | 3.34/5.00       |
-| 10  | Usual Suspects, The (1995)               | 3.34/5.00       |
-
-Tabel 7. hasil pengujian pada user dengan ID "21"
+## Kesimpulan
 
 Berdasarkan evaluasi sistem rekomendasi yang dikembangkan, pendekatan *Content-Based Filtering* dan *Collaborative Filtering* berhasil digunakan untuk memberikan rekomendasi film yang relevan kepada pengguna. Meskipun *Content-Based Filtering* efektif dalam merekomendasikan film berdasarkan kesamaan konten, pendekatan *Collaborative Filtering* menunjukkan kinerja yang lebih baik dalam mempersonalisasi rekomendasi, dengan hasil prediksi rating yang cukup akurat berdasarkan metrik **RMSE**. 
 
