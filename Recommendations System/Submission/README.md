@@ -329,47 +329,27 @@ $$
 
 <p align="center">Rumus 3. Rumus precision</p>
 
-#### Pengujian pada film "Toy Story (1995)"
-
-> Target genres: Comedy, Animation, Children's
-
-|     | title                                                          | genre     | similarity |
-| :-- | :------------------------------------------------------------- | :-------- | :---------- |
-| 1   | Aladdin and the King of Thieves (1996)                         | Animation | 1.0002      |
-| 2   | Aristocats, The (1970)                                         | Animation | 0.9373      |
-| 3   | Pinocchio (1940)                                               | Animation | 0.9374      |
-| 4   | Sword in the Stone, The (1963)                                 | Animation | 0.9375      |
-| 5   | Fox and the Hound, The (1981)                                  | Animation | 0.9376      |
-| 6   | Winnie the Pooh and the Blustery Day (1968)                     | Animation | 0.9377      |
-| 7   | Balto (1995)                                                   | Animation | 0.9378      |
-| 8   | Oliver & Company (1988)                                        | Animation | 0.9379      |
-| 9   | Swan Princess, The (1994)                                      | Animation | 0.93710     |
-| 10  | Land Before Time III: The Time of the Great Giving (1995) (V) | Animation | 0.937       |
-
-Tabel 8. Hasil pengujian pada film "Toy Story (1995)"
-
-Tabel 8 menunjukkan bahwa film **Toy Story (1995)** memiliki 3 *genre* yaitu `Comedy, Animation, Children's` dimana film **Aladdin and the King of Thieves (1996)** memiliki 3 *genre* yang sama sehingga memiliki *score similarity* mencapai `1.0`. Sedangkan film yang lain hanya memiliki 2 *genre* yang sama, maka dari itu *cosine similarity* hanya memiliki score `0.937`.
-
 #### Pengujian pada film "You So Crazy (1994)"
 
 > Target genres: Comedy
 
-|     | title                                                        | genre  | similarity |
-| :-- | :----------------------------------------------------------- | :----- | :---------- |
-| 1   | Birdcage, The (1996)                                       | Comedy | 1.0       |
-| 2   | Brothers McMullen, The (1995)                              | Comedy | 1.0        |
-| 3   | To Wong Foo, Thanks for Everything! Julie Newmar (1995)    | Comedy | 1.0        |
-| 4   | Billy Madison (1995)                                       | Comedy | 1.0        |
-| 5   | Clerks (1994)                                              | Comedy | 1.0        |
-| 6   | Ace Ventura: Pet Detective (1994)                          | Comedy | 1.0        |
-| 7   | Ref, The (1994)                                            | Comedy | 1.0        |
-| 8   | Theodore Rex (1995)                                        | Comedy | 1.0        |
-| 9   | Sgt. Bilko (1996)                                          | Comedy | 1.0       |
-| 10  | Kids in the Hall: Brain Candy (1996)                      | Comedy | 1.0         |
+|        | title                                                    | genre       |
+|--------|----------------------------------------------------------|-------------|
+| sample | You So Crazy (1994)                                      | Comedy      |
+| Top-K  | Birdcage, The (1996)                                     | Comedy      |
+| Top-K  | Brothers McMullen, The (1995)                            | Comedy      |
+| Top-K  | To Wong Foo, Thanks for Everything! Julie Newmar (1995)   | Comedy      |
+| Top-K  | Billy Madison (1995)                                     | Comedy      |
+| Top-K  | Clerks (1994)                                            | Comedy      |
+| Top-K  | Ace Ventura: Pet Detective (1994)                        | Comedy      |
+| Top-K  | Ref, The (1994)                                          | Comedy      |
+| Top-K  | Theodore Rex (1995)                                      | Comedy      |
+| Top-K  | Sgt. Bilko (1996)                                        | Comedy      |
+| Top-K  | Kids in the Hall: Brain Candy (1996)                     | Comedy      |
 
-Tabel 9. hasil pengujian pada film "You So Crazy (1994)"
+Tabel 8. hasil pengujian pada film "You So Crazy (1994)"
 
-Tabel 9 menunjukkan bahwa semua film yang direkomendasikan memiliki *score similarity* **1.0**, karena film yang ingin direkomendasikan hanya memiliki 1 genre yang `Comedy`.
+Berdasarkan Tabel 8, sampel film yang di uji memiliki genre `Comedy`. Konsisten dengan hal tersebut, seluruh hasil rekomendasi Top-K juga berada dalam genre `Comedy`. Dengan demikian, nilai presisi yang tercapai adalah 100% (10/10).
 
 ### Collaborative Filtering
 
